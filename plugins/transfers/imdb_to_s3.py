@@ -14,7 +14,6 @@ class ImdbToS3Operator(BaseOperator):
             bucket_name,
             endpoint="title.basics.tsv.gz",
             replace=True,
-            acl_policy=None,
             imdb_conn_id="imdb_default",
             s3_conn_id="s3_default",
             **kwargs
