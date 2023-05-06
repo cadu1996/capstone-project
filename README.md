@@ -70,7 +70,46 @@ To set up and run the project, you will need:
 
 ### Installation
 
-_TODO: Add installation instructions here._
+1. Install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) on your system.
+
+2. Clone the project repository:
+
+   ```bash
+   git clone https://github.com/your_username/your_project.git
+   ```
+
+3. Change to the project directory:
+
+   ```bash
+   cd your_project
+   ```
+
+4. Set up the required directories and environment variables (for Linux):
+
+   ```bash
+   mkdir -p ./dags ./logs ./plugins
+   echo -e "AIRFLOW_UID=$(id -u)" > .env
+   ```
+
+5. Start Docker Compose:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+6. Access Airflow at `http://localhost:8080`.
+
+7. Log in to Airflow using the username and password `Airflow`.
+
+8. Create a cluster in Amazon Redshift and an S3 Bucket.
+
+9. Set up connections in Airflow for Amazon Redshift and the S3 Bucket:
+   - Redshift: Create a new connection with the required credentials.
+   - S3 Bucket: Set up the AWS credentials (access key and secret key) in Airflow.
+
+10. Set up an HTTP connection in Airflow for IMDb datasets with the following hostname: `https://datasets.imdbws.com/`.
+
+11. Enable the DAG in Airflow and configure it to run daily.
 
 ...
 
