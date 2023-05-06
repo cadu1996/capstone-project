@@ -134,6 +134,7 @@ ORDER BY
     r.averageRating DESC
 LIMIT 10;
 
+
 The query provided retrieves the top 10 highest-rated TV series in the Drama genre, with at least 1000 votes. The query returns the following information for each TV series:
 
 - tconst: Unique identifier of the TV series
