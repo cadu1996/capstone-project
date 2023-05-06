@@ -26,7 +26,6 @@ class ImdbToS3Operator(BaseOperator):
         self.bucket_name = bucket_name
         self.endpoint = endpoint
         self.replace = replace
-        self.acl_policy = acl_policy
         self.imdb_conn_id = imdb_conn_id
         self.s3_conn_id = s3_conn_id
 

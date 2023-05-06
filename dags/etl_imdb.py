@@ -38,7 +38,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.basics.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_ratings = ImdbToS3Operator(
@@ -47,7 +46,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.ratings.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_crew = ImdbToS3Operator(
@@ -56,7 +54,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.crew.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_principals = ImdbToS3Operator(
@@ -65,7 +62,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.principals.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_names = ImdbToS3Operator(
@@ -74,7 +70,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="name.basics.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_akas = ImdbToS3Operator(
@@ -83,7 +78,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.akas.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
         fetch_imdb_episode = ImdbToS3Operator(
@@ -92,7 +86,6 @@ with DAG(
             bucket_name="imdb-dend-analytics",
             endpoint="title.episode.tsv.gz",
             replace=True,
-            acl_policy="public-read",
         )
 
 
