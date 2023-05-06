@@ -37,7 +37,7 @@ class SqlQueries:
             nconst VARCHAR(255),
             category VARCHAR(255),
             job VARCHAR(255),
-            characters VARCHAR(255)
+            characters VARCHAR(MAX)
         );
     """)
 
