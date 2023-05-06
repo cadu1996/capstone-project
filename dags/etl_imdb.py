@@ -92,43 +92,43 @@ with DAG(
     with TaskGroup("Create_Tables") as create_tables:
         create_imdb_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_basics_create,
         )
 
         create_imdb_ratings_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Ratings_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_ratings_create,
         )
 
         create_imdb_crew_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Crew_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_crew_create,
         )
 
         create_imdb_principals_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Principals_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_principals_create,
         )
 
         create_imdb_names_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Names_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_name_basics_create,
         )
 
         create_imdb_akas_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Akas_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_akas_create,
         )
 
         create_imdb_episode_table = RedshiftSQLOperator(
             task_id="Create_IMDB_Episode_Table",
-            postgres_conn_id="redshift",
+            redshift_conn_id="redshift",
             sql=SqlQueries.imdb_title_episode_create,
         )
 
