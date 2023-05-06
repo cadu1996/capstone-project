@@ -3,13 +3,14 @@ from datetime import timedelta
 
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.utils.task_group import TaskGroup
+from airflow.providers.amazon.aws.transfers.s3_to_redshift import \
+    S3ToRedshiftOperator
 from airflow.utils.dates import days_ago
-from transfers.imdb_to_s3 import ImdbToS3Operator
+from airflow.utils.task_group import TaskGroup
 from helpers.sql_queries import SqlQueries
 from operators.data_quality import DataQualityOperator
 from operators.redshift_sql import RedshiftSQLOperator
-from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+from transfers.imdb_to_s3 import ImdbToS3Operator
 
 default_args = {
     "owner": "udacity",
@@ -58,7 +59,6 @@ with DAG(
             replace=True,
             s3_conn_id="aws_credentials",
         )
-
 
     with TaskGroup("Create_Tables") as create_tables:
         create_imdb_title_table = RedshiftSQLOperator(
@@ -135,10 +135,20 @@ with DAG(
         check_imdb = DataQualityOperator(
             task_id="Check_IMDB",
             redshift_conn_id="redshift",
-            tables=["imdb_title_basics", "imdb_title_ratings", "imdb_title_episode"],
+            tables=[
+                "imdb_title_basics",
+                "imdb_title_ratings",
+                "imdb_title_episode"
+                ],
         )
-
 
     end_operator = DummyOperator(task_id="End")
 
-    start_operator >> fetch_data >> create_tables >> stage_data >> data_quality >> end_operator
+    (
+        start_operator
+        >> fetch_data
+        >> create_tables
+        >> stage_data
+        >> data_quality
+        >> end_operator
+    )
