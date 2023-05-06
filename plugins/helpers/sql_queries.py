@@ -52,19 +52,6 @@ class SqlQueries:
         );
     """)
 
-    imdb_title_akas_create = ("""
-        CREATE TABLE IF NOT EXISTS public.imdb_title_akas (
-            titleId VARCHAR(255) NOT NULL,
-            ordering INTEGER,
-            title VARCHAR(255),
-            region VARCHAR(255),
-            language VARCHAR(255),
-            types VARCHAR(255),
-            attributes VARCHAR(255),
-            isOriginalTitle INTEGER
-        );
-    """)
-
     imdb_title_episode_create = ("""
         CREATE TABLE IF NOT EXISTS public.imdb_title_episode (
             tconst VARCHAR(255) NOT NULL,

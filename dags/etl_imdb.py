@@ -72,14 +72,6 @@ with DAG(
             replace=True,
         )
 
-        fetch_imdb_akas = ImdbToS3Operator(
-            task_id="Fetch_IMDB_Akas",
-            key="imdb/title.akas.tsv.gz",
-            bucket_name="imdb-dend-analytics",
-            endpoint="title.akas.tsv.gz",
-            replace=True,
-        )
-
         fetch_imdb_episode = ImdbToS3Operator(
             task_id="Fetch_IMDB_Episode",
             key="imdb/title.episode.tsv.gz",
@@ -118,12 +110,6 @@ with DAG(
             task_id="Create_IMDB_Names_Table",
             redshift_conn_id="redshift",
             sql=SqlQueries.imdb_name_basics_create,
-        )
-
-        create_imdb_akas_table = RedshiftSQLOperator(
-            task_id="Create_IMDB_Akas_Table",
-            redshift_conn_id="redshift",
-            sql=SqlQueries.imdb_title_akas_create,
         )
 
         create_imdb_episode_table = RedshiftSQLOperator(
@@ -183,7 +169,7 @@ with DAG(
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
-                "NULL AS '\\N'",
+                "NULL AS '\\\\N'",
             ],
             redshift_conn_id="redshift",
             aws_conn_id="aws_credentials",
@@ -202,7 +188,7 @@ with DAG(
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
-                "NULL AS '\\N'",
+                "NULL AS '\\\\N'",
             ],
             redshift_conn_id="redshift",
             aws_conn_id="aws_credentials",
@@ -221,31 +207,13 @@ with DAG(
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
-                "NULL AS '\\N'",
+                "NULL AS '\\\\N'",
             ],
             redshift_conn_id="redshift",
             aws_conn_id="aws_credentials",
             autocommit=True,
         )
 
-        load_akas_to_redshift = S3ToRedshiftOperator(
-            task_id="Load_Akas_to_Redshift",
-            schema="public",
-            table="imdb_title_akas",
-            s3_bucket="imdb-dend-analytics",
-            s3_key="imdb/title.akas.tsv.gz",
-            copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
-                "IGNOREHEADER 1",
-                "DELIMITER '\t'",
-                "GZIP",
-                "NULL AS '\\N'",
-            ],
-            redshift_conn_id="redshift",
-            aws_conn_id="aws_credentials",
-            autocommit=True,
-        )
 
         load_episode_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Episode_to_Redshift",
@@ -259,7 +227,7 @@ with DAG(
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
-                "NULL AS '\\N'",
+                "NULL AS '\\\\N'",
             ],
             redshift_conn_id="redshift",
             aws_conn_id="aws_credentials",
