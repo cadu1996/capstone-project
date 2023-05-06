@@ -132,8 +132,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.basics.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
@@ -150,8 +148,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.ratings.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
@@ -168,8 +164,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.crew.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
@@ -186,8 +180,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.principals.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
@@ -204,8 +196,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/name.basics.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
@@ -223,8 +213,6 @@ with DAG(
             s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.episode.tsv.gz",
             copy_options=[
-                "COMPUPDATE OFF",
-                "STATUPDATE OFF",
                 "IGNOREHEADER 1",
                 "DELIMITER '\t'",
                 "GZIP",
