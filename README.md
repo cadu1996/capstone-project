@@ -111,7 +111,6 @@ To set up and run the project, you will need:
 
 11. Enable the DAG in Airflow and configure it to run daily.
 
-...
 
 ## Usage
 
