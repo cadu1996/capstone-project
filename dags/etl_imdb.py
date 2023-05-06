@@ -5,8 +5,11 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.dates import days_ago
-from plugins.operators.imdb_to_s3 import ImdbToS3Operator
+from transfers.imdb_to_s3 import ImdbToS3Operator
+from helpers.sql_queries import SqlQueries
+from operators.data_quality import DataQualityOperator
 from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 default_args = {
     "owner": "udacity",
@@ -32,7 +35,7 @@ with DAG(
         fetch_imdb_data = ImdbToS3Operator(
             task_id="Fetch_IMDB_Data",
             key="imdb/title.basics.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.basics.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -41,7 +44,7 @@ with DAG(
         fetch_imdb_ratings = ImdbToS3Operator(
             task_id="Fetch_IMDB_Ratings",
             key="imdb/title.ratings.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.ratings.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -50,7 +53,7 @@ with DAG(
         fetch_imdb_crew = ImdbToS3Operator(
             task_id="Fetch_IMDB_Crew",
             key="imdb/title.crew.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.crew.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -59,7 +62,7 @@ with DAG(
         fetch_imdb_principals = ImdbToS3Operator(
             task_id="Fetch_IMDB_Principals",
             key="imdb/title.principals.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.principals.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -68,7 +71,7 @@ with DAG(
         fetch_imdb_names = ImdbToS3Operator(
             task_id="Fetch_IMDB_Names",
             key="imdb/name.basics.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="name.basics.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -77,7 +80,7 @@ with DAG(
         fetch_imdb_akas = ImdbToS3Operator(
             task_id="Fetch_IMDB_Akas",
             key="imdb/title.akas.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.akas.tsv.gz",
             replace=True,
             acl_policy="public-read",
@@ -86,18 +89,62 @@ with DAG(
         fetch_imdb_episode = ImdbToS3Operator(
             task_id="Fetch_IMDB_Episode",
             key="imdb/title.episode.tsv.gz",
-            bucket_name="udacity-dend",
+            bucket_name="imdb-dend-analytics",
             endpoint="title.episode.tsv.gz",
             replace=True,
             acl_policy="public-read",
+        )
+
+
+    with TaskGroup("Create_Tables") as create_tables:
+        create_imdb_table = PostgresOperator(
+            task_id="Create_IMDB_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_basics_create,
+        )
+
+        create_imdb_ratings_table = PostgresOperator(
+            task_id="Create_IMDB_Ratings_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_ratings_create,
+        )
+
+        create_imdb_crew_table = PostgresOperator(
+            task_id="Create_IMDB_Crew_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_crew_create,
+        )
+
+        create_imdb_principals_table = PostgresOperator(
+            task_id="Create_IMDB_Principals_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_principals_create,
+        )
+
+        create_imdb_names_table = PostgresOperator(
+            task_id="Create_IMDB_Names_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_name_basics_create,
+        )
+
+        create_imdb_akas_table = PostgresOperator(
+            task_id="Create_IMDB_Akas_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_akas_create,
+        )
+
+        create_imdb_episode_table = PostgresOperator(
+            task_id="Create_IMDB_Episode_Table",
+            postgres_conn_id="redshift",
+            sql=SqlQueries.imdb_title_episode_create,
         )
 
     with TaskGroup("Load_Data") as load_data:
         load_data_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Data_to_Redshift",
             schema="public",
-            table="imdb",
-            s3_bucket="udacity-dend",
+            table="imdb_title_basics",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.basics.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -114,8 +161,8 @@ with DAG(
         load_ratings_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Ratings_to_Redshift",
             schema="public",
-            table="imdb_ratings",
-            s3_bucket="udacity-dend",
+            table="imdb_title_ratings",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.ratings.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -132,8 +179,8 @@ with DAG(
         load_crew_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Crew_to_Redshift",
             schema="public",
-            table="imdb_crew",
-            s3_bucket="udacity-dend",
+            table="imdb_title_crew",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.crew.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -150,8 +197,8 @@ with DAG(
         load_principals_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Principals_to_Redshift",
             schema="public",
-            table="imdb_principals",
-            s3_bucket="udacity-dend",
+            table="imdb_title_principals",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.principals.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -168,8 +215,8 @@ with DAG(
         load_names_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Names_to_Redshift",
             schema="public",
-            table="imdb_names",
-            s3_bucket="udacity-dend",
+            table="imdb_name_basics",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/name.basics.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -186,8 +233,8 @@ with DAG(
         load_akas_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Akas_to_Redshift",
             schema="public",
-            table="imdb_akas",
-            s3_bucket="udacity-dend",
+            table="imdb_title_akas",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.akas.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -204,8 +251,8 @@ with DAG(
         load_episode_to_redshift = S3ToRedshiftOperator(
             task_id="Load_Episode_to_Redshift",
             schema="public",
-            table="imdb_episode",
-            s3_bucket="udacity-dend",
+            table="imdb_title_episode",
+            s3_bucket="imdb-dend-analytics",
             s3_key="imdb/title.episode.tsv.gz",
             copy_options=[
                 "COMPUPDATE OFF",
@@ -220,8 +267,13 @@ with DAG(
         )
 
     with TaskGroup("Data_Quality") as data_quality:
-        pass
+        check_imdb = DataQualityOperator(
+            task_id="Check_IMDB",
+            redshift_conn_id="redshift",
+            tables=["imdb", "imdb_ratings", "imdb_crew", "imdb_principals", "imdb_names", "imdb_akas", "imdb_episode"],
+        )
+
 
     end_operator = DummyOperator(task_id="End")
 
-    start_operator >> fetch_data >> load_data >> data_quality >> end_operator
+    start_operator >> fetch_data >> create_tables >> load_data >> data_quality >> end_operator

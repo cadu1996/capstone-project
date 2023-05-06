@@ -20,7 +20,7 @@ class ImdbToS3Operator(BaseOperator):
             **kwargs
             ):
         
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
 
         self.key = key
         self.bucket_name = bucket_name
@@ -38,7 +38,7 @@ class ImdbToS3Operator(BaseOperator):
 
         imdb_hook = HttpHook(
             method="GET",
-            http_conn_id=self.pushshift_conn_id,
+            http_conn_id=self.imdb_conn_id,
             )
         
         s3_hook = S3Hook(
