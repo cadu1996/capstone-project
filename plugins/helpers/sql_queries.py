@@ -4,8 +4,8 @@ class SqlQueries:
         CREATE TABLE IF NOT EXISTS public.imdb_title_basics (
             tconst VARCHAR(255) NOT NULL,
             titleType VARCHAR(255),
-            primaryTitle VARCHAR(255),
-            originalTitle VARCHAR(255),
+            primaryTitle VARCHAR(MAX),
+            originalTitle VARCHAR(MAX),
             isAdult INTEGER,
             startYear INTEGER,
             endYear INTEGER,
@@ -25,8 +25,8 @@ class SqlQueries:
     imdb_title_crew_create = ("""
         CREATE TABLE IF NOT EXISTS public.imdb_title_crew (
             tconst VARCHAR(255) NOT NULL,
-            directors VARCHAR(255),
-            writers VARCHAR(255)    
+            directors VARCHAR(MAX),
+            writers VARCHAR(MAX)    
         );
     """)
 
