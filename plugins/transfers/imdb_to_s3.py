@@ -54,6 +54,5 @@ class ImdbToS3Operator(BaseOperator):
             key=self.key,
             bucket_name=self.bucket_name,
             replace=self.replace,
-            acl_policy=self.acl_policy,
         )
 
