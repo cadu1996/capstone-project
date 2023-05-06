@@ -8,8 +8,8 @@ from airflow.utils.dates import days_ago
 from transfers.imdb_to_s3 import ImdbToS3Operator
 from helpers.sql_queries import SqlQueries
 from operators.data_quality import DataQualityOperator
+from operators.redshift_sql import RedshiftSQLOperator
 from airflow.providers.amazon.aws.transfers.s3_to_redshift import S3ToRedshiftOperator
-from airflow.providers.amazon.aws.operators.redshift_sql import RedshiftSQLOperator
 
 default_args = {
     "owner": "udacity",
