@@ -36,7 +36,7 @@ class SqlQueries:
             ordering INTEGER,
             nconst VARCHAR(255),
             category VARCHAR(255),
-            job VARCHAR(255),
+            job VARCHAR(MAX),
             characters VARCHAR(MAX)
         );
     """)
